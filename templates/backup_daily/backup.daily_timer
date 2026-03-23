@@ -1,0 +1,10 @@
+# /etc/systemd/system/backup_daily.timer
+[Unit]
+Description=backup_daily
+[Timer]
+OnCalendar={{ backup_schedule.daily }}
+Persistent=true
+AccuracySec=1min
+
+[Install]
+WantedBy=timers.target

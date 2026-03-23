@@ -1,0 +1,33 @@
+Host *
+    StrictHostKeyChecking no
+    UserKnownHostsFile=/dev/null
+    LogLevel QUIET
+
+Host svx-express-front.ar.int
+    Hostname 192.168.221.4
+    User root
+
+Host svx-express-media.ar.int
+    Hostname 192.168.221.9
+    User root
+
+Host {{ hosts.back }}
+    Hostname 192.168.221.5
+    User root
+    #ProxyJump svx-express-front.ar.int
+
+Host {{ postgres.host }}
+    Hostname 192.168.221.7
+    User root
+
+Host svx-express-rec.ar.int
+    Hostname 192.168.221.10
+    User root
+
+Host {{ etcd.host }}
+    Hostname 192.168.221.8
+    User root
+
+Host svx-express-bot.ar.int
+    Hostname 192.168.221.6
+    User root

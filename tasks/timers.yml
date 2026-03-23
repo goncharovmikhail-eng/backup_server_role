@@ -1,0 +1,8 @@
+- name: Enable timers
+  systemd:
+    name: "{{ item }}"
+    enabled: yes
+    state: started
+  loop:
+    - backup_full.timer
+    - backup_daily.timer

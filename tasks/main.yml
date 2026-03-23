@@ -1,0 +1,6 @@
+---
+- import_tasks: dirs.yml
+- import_tasks: core.yml
+- import_tasks: pgbackrest.yml
+- import_tasks: systemd.yml
+- import_tasks: timers.yml

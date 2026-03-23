@@ -1,0 +1,17 @@
+---
+- name: Copy core scripts
+  copy:
+    src: core/
+    dest: /usr/local/bin/
+    mode: '0755'
+
+- name: Deploy aliases
+  template:
+    src: backup_core/alias.sh.j2
+    dest: "{{ paths.core }}/alias.sh"
+
+- name: Deploy motd
+  template:
+    src: backup_core/motd.sh.j2
+    dest: "{{ paths.core }}/motd.sh"
+    mode: '0755'

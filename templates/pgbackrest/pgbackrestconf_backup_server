@@ -1,0 +1,12 @@
+[main]
+pg1-host={{ postgres.host }}
+pg1-host-user={{ postgres.user }}
+pg1-path={{ postgres.data_dir }}
+
+[global]
+repo1-path={{ paths.postgres }}
+repo1-retention-full={{ backup_retention.full_count }}
+
+log-path={{ paths.logs_pg }}
+log-level-file=info
+log-level-console=info

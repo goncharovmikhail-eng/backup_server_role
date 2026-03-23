@@ -1,0 +1,42 @@
+---
+pg_version: 15
+
+backup_retention:
+  etcd_days: 30
+  docker_days: 7
+  config_days: 30
+  full_count: 4
+
+backup_schedule:
+  daily: "Mon..Sat 22:00:00"
+  full: "Sun 01:00"
+
+paths:
+  base: /backups
+  postgres: "{{ paths.base }}/postgres"
+  etcd: "{{ paths.base }}/etcd"
+  configs: "{{ paths.base }}/configs"
+  volumes: "{{ paths.base }}/docker_volumes"
+  logs_pg: /var/log/pgbackrest
+  logs: /var/log
+  core: /root/backup_scripts
+
+postgres:
+  host: svx-express-postgres.ar.int
+  user: postgres
+  data_dir: "/var/lib/postgresql/{{ pg_version }}/main"
+  owner_psql_backupdir: root #на бэкап сервере
+
+hosts:
+  backup: svx-express-backup.ar.int
+  back: svx-express-back.ar.int
+  
+etcd: 
+  host: svx-express-ekr.ar.int
+  port: 2379
+
+logs: 
+  backup_config: "/var/log/backup_config.log"
+  full_backup: "/var/log/backup_full.log"
+  daily_backup: "/var/log/backup_daily.log"
+  clean_backup: "/var/log/clean_backups.log"

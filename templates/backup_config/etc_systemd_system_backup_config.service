@@ -1,0 +1,20 @@
+# /etc/systemd/system/backup_config.service
+[Unit]
+Description=config backup from all CTS servers
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/backup_config
+User=root
+Group=root
+Nice=10
+#StandardOutput=journal
+#StandardError=journal
+StandardOutput=append:{{ logs.backup_config }}
+StandardError=append:{{ logs.backup_config }}
+TimeoutStartSec=2h
+
+[Install]
+WantedBy=multi-user.target

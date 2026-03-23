@@ -1,0 +1,11 @@
+# /etc/systemd/system/backup_full.timer
+[Unit]
+Description=Full backup
+
+[Timer]
+OnCalendar={{ backup_schedule.full }}
+Persistent=true
+AccuracySec=1min
+
+[Install]
+WantedBy=timers.target

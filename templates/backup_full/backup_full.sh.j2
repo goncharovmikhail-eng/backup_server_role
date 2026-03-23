@@ -1,0 +1,27 @@
+#!/bin/bash
+
+echo -e "=== Starting full-backup: $(date '+%Y-%m-%d %H:%M:%S') ==="
+
+backup_etcd
+backup_config
+
+pgbackrest --stanza=main --repo1-path={{ paths.postgres }} --type=full backup
+
+echo -e "Начало потокового бэкапа /var/lib/docker/volumes с {{ hosts.back }}. Осознанный full only"
+ssh {{ hosts.back }} 'tar czpf - -C / var/lib/docker/volumes' \
+  | cat > "{{ paths.volumes }}/backup_docker_volumes$(date +%F-%H%M%S).tar.gz"
+
+# Очистка старых бэкапов
+echo "=== $(date) /clean backups etcd ===" >> {{ logs.clean_backup }}
+find {{ paths.etcd }} -type f -name "*.db" -mtime +{{ backup_retention.etcd_days }} \
+  -print -delete >> {{ logs.clean_backup }} 2>&1
+
+echo "=== $(date) /clean configs backups ===" >> {{ logs.clean_backup }}
+find {{ paths.configs }} -type f -name "*.tar.gz" -mtime +{{ backup_retention.config_days }} \
+  -print -delete >> {{ logs.clean_backup }} 2>&1
+
+echo "=== $(date) /clean docker_volumes backups ===" >> {{ logs.clean_backup }}
+find {{ paths.volumes }} -type f -name "*.tar.gz" -mtime +{{ backup_retention.docker_days }} \
+  -print -delete >> {{ logs.clean_backup }} 2>&1
+
+echo -e "=== Finished full-backup: $(date '+%Y-%m-%d %H:%M:%S') ==="

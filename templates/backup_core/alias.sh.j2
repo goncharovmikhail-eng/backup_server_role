@@ -1,0 +1,76 @@
+# ---------------------------------------------------------------
+# Алиасы для PostgreSQL / pgBackRest
+# ---------------------------------------------------------------
+alias log_psql_restore="cat {{ paths.logs_pg }}/main-restore.log"
+alias log_psql_backup="cat {{ paths.logs_pg }}/main-backup.log"
+alias backup_psql_incr="pgbackrest --stanza=main --type=incr backup"
+alias backup_psql_full="pgbackrest --stanza=main --repo1-path={{ paths.postgres }} --type=full backup"
+
+# ---------------------------------------------------------------
+# Logs
+# ---------------------------------------------------------------
+alias log_full_backup="cat {{ logs.full_backup }}"
+alias log_daily_backup="cat {{ logs.daily_backup }}"
+alias log_clean_backup="cat {{ logs.clean_backup }}"
+alias log_backup_config="cat {{ logs.backup_config }}"
+
+# ---------------------------------------------------------------
+# Алиасы для etcd
+# ---------------------------------------------------------------
+# backup_etcd и etcd_restore должны быть в /usr/local/bin/
+
+# ---------------------------------------------------------------
+# Docker volumes с датой и временем
+# ---------------------------------------------------------------
+alias backup_volumes="ssh {{ hosts.back }} 'tar czpf - -C /var/lib/docker/volumes' | cat > {{ paths.volumes }}/backup_docker_volumes\$(date +%F-%H%M%S).tar.gz && tree {{ paths.volumes }}"
+
+# ---------------------------------------------------------------
+# Конфиги и другие серверные файлы
+# ---------------------------------------------------------------
+backup_config_f() {
+    if [ -z "${1:-}" ]; then
+        echo "Usage: collect <server> [archive_prefix]"
+        return 1
+    fi
+
+    local SERVER="$1"
+    local ARCHIVE_PREFIX="${2:-$SERVER}"
+    local BACKUP_DIR="{{ paths.configs }}"
+
+    mkdir -p "$BACKUP_DIR"
+
+    local TIMESTAMP
+    TIMESTAMP=$(date +%F-%H%M%S)
+    local ARCHIVE_NAME="${ARCHIVE_PREFIX}_${TIMESTAMP}.tar.gz"
+
+    echo "=== Collecting from $SERVER ==="
+    echo "Archive name: $ARCHIVE_NAME"
+
+    ssh "$SERVER" "bash -s -- \"$ARCHIVE_NAME\"" < {{ paths.core }}/backup_config.sh
+
+    echo "Downloading to: $BACKUP_DIR/$ARCHIVE_NAME"
+    scp "$SERVER:/tmp/$ARCHIVE_NAME" "$BACKUP_DIR/"
+
+    # Очистка временных файлов на сервере
+    ssh "$SERVER" "rm -f /tmp/$ARCHIVE_NAME"
+
+    echo "Done! Saved to: $BACKUP_DIR/$ARCHIVE_NAME"
+}
+
+alias backup_configs="time systemctl start backup_config.service && tree {{ paths.base }}"
+
+# ---------------------------------------------------------------
+# Очистка бэкапов
+# ---------------------------------------------------------------
+alias clear_backups="rm -rf {{ paths.etcd }}/* {{ paths.postgres }}/* {{ paths.configs }}/* {{ paths.volumes }}/* && tree {{ paths.base }}"
+
+# ---------------------------------------------------------------
+# Прочее
+# ---------------------------------------------------------------
+cl() { echo '' > "$1" && vim "$1"; }
+aliasw() { nano "$HOME/moth.sh" && source "$HOME/moth.sh"; echo "Aliases reloaded"; }
+alias res="source ~/.zshrc"
+alias scc="less ~/.ssh/config"
+alias sc="vim ~/.ssh/config"
+alias md="mkdir -p"
+alias gitup="git fetch && git pull"

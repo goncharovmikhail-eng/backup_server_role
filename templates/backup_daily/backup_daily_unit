@@ -1,0 +1,20 @@
+# /etc/systemd/system/backup_daily.service
+[Unit]
+Description=full backup from servers 
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/backup_daily
+User=root
+Group=root
+Nice=10
+#StandardOutput=journal
+#StandardError=journal
+StandardOutput=append:{{ logs.daily_backup }}
+StandardError=append:{{ logs.daily_backup }}
+TimeoutStartSec=2h
+
+[Install]
+WantedBy=multi-user.target

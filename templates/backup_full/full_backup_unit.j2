@@ -1,0 +1,20 @@
+# /etc/systemd/system/backup_full.service
+[Unit]
+Description=backup_full
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/backup_full
+User=root
+Group=root
+Nice=10
+#StandardOutput=journal
+#StandardError=journal
+StandardOutput=append:{{ logs.full_backup }}
+StandardError=append:{{ logs.full_backup }}
+TimeoutStartSec=2h
+
+[Install]
+WantedBy=multi-user.target
