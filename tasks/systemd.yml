@@ -4,24 +4,24 @@
     dest: "/usr/local/bin/{{ item.dest }}"
     mode: '0755'
   loop:
-    - { src: "backup_full.sh.j2", dest: "backup_full.sh" }
-    - { src: "backup_daily.sh.j2", dest: "backup_daily.sh" }
+    - { src: "backup_full/backup_full.sh.j2", dest: "backup_full.sh" }
+    - { src: "backup_daily/backup_daily.sh.j2", dest: "backup_daily.sh" }
 
 - name: Deploy services
   template:
     src: "{{ item }}"
     dest: "/etc/systemd/system/{{ item | basename | regex_replace('.j2','') }}"
   loop:
-    - backup_full.service.j2
-    - backup_daily.service.j2
+    - backup_full/backup_full.service.j2
+    - backup_daily/backup_daily.service.j2
 
 - name: Deploy timers
   template:
     src: "{{ item }}"
     dest: "/etc/systemd/system/{{ item | basename | regex_replace('.j2','') }}"
   loop:
-    - backup_full.timer.j2
-    - backup_daily.timer.j2
+    - backup_full/backup_full.timer.j2
+    - backup_daily/backup_daily.timer.j2
 
 - name: Reload systemd
   command: systemctl daemon-reload
