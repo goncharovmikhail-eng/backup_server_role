@@ -10,6 +10,11 @@
     src: backup_core/alias.sh.j2
     dest: "{{ paths.core }}/alias.sh"
 
+- name: Deploy ~/ssh/config
+  template:
+    src: backup_core/ssh_config.j2
+    dest: "~/.ssh/config"
+
 - name: Deploy motd
   template:
     src: backup_core/moth.sh.j2
