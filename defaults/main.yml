@@ -20,6 +20,7 @@ paths:
   logs_pg: /var/log/pgbackrest
   logs: /var/log
   core: /root/backup_scripts
+  conf_pgbackrest: "/etc/pgbackrest/pgbackrest.conf"
 
 postgres:
   host: svx-express-postgres.ar.int
