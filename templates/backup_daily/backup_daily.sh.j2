@@ -8,4 +8,8 @@ ssh "{{ hosts.back }}" 'tar czpf - -C / var/lib/docker/volumes' | cat > {{ paths
 echo -e "Начало инкремента postgres"
 pgbackrest --stanza=main --type=incr backup
 
+echo "=== $(date) /clean docker_volumes backups ===" >> {{ logs.clean_backup }}
+find {{ paths.volumes }} -type f -name "*.tar.gz" -mtime +{{ backup_retention.docker_days }} \
+  -print -delete >> {{ logs.clean_backup }} 2>&1
+
 echo -e "=== Finished backup_daily: $(date '+%Y-%m-%d %H:%M:%S') ==="

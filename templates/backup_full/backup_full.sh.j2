@@ -20,8 +20,4 @@ echo "=== $(date) /clean configs backups ===" >> {{ logs.clean_backup }}
 find {{ paths.configs }} -type f -name "*.tar.gz" -mtime +{{ backup_retention.config_days }} \
   -print -delete >> {{ logs.clean_backup }} 2>&1
 
-echo "=== $(date) /clean docker_volumes backups ===" >> {{ logs.clean_backup }}
-find {{ paths.volumes }} -type f -name "*.tar.gz" -mtime +{{ backup_retention.docker_days }} \
-  -print -delete >> {{ logs.clean_backup }} 2>&1
-
 echo -e "=== Finished full-backup: $(date '+%Y-%m-%d %H:%M:%S') ==="
