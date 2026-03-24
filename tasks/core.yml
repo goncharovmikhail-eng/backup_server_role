@@ -5,9 +5,9 @@
     dest: /usr/local/bin/
     mode: '0755'
 
-- name: Deploy aliases
+- name: Copy pgbackrest.conf_psql_server
   template:
-    src: backup_core/pgbackrest.conf_psql_server.j2
+    src: pgbackrest/pgbackrest.conf_psql_server.j2
     dest: "{{ paths.core }}/pgbackrest.conf_psql_server"
 
 - name: Deploy ~/ssh/config
