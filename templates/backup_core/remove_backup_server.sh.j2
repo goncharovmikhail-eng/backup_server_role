@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+echo "=== Removing backup server components: $(date) ==="
+
+# ---------------------------------------------------------------
+# Остановка таймеров и сервисов
+# ---------------------------------------------------------------
+echo "[INFO] Stopping systemd timers and services..."
+
+systemctl stop backup_daily.timer 2>/dev/null || true
+systemctl stop backup_full.timer 2>/dev/null || true
+
+systemctl stop backup_daily.service 2>/dev/null || true
+systemctl stop backup_full.service 2>/dev/null || true
+
+systemctl disable backup_daily.timer 2>/dev/null || true
+systemctl disable backup_full.timer 2>/dev/null || true
+
+# ---------------------------------------------------------------
+# Удаление systemd unit файлов
+# ---------------------------------------------------------------
+echo "[INFO] Removing systemd unit files..."
+
+rm -f /etc/systemd/system/backup_daily.timer
+rm -f /etc/systemd/system/backup_full.timer
+rm -f /etc/systemd/system/backup_daily.service
+rm -f /etc/systemd/system/backup_full.service
+
+systemctl daemon-reload
+
+# ---------------------------------------------------------------
+# Удаление скриптов
+# ---------------------------------------------------------------
+echo "[INFO] Removing backup scripts..."
+
+rm -f /usr/local/bin/backup_daily.sh
+rm -f /usr/local/bin/backup_full.sh
+
+# core scripts
+rm -rf {{ paths.core }}
+
+# ---------------------------------------------------------------
+# Удаление конфигов
+# ---------------------------------------------------------------
+echo "[INFO] Removing configs..."
+
+rm -f /etc/pgbackrest/pgbackrest.conf
+rm -f /root/alias.sh
+rm -f /etc/profile.d/motd.sh
+
+# ---------------------------------------------------------------
+# Логи (по желанию)
+# ---------------------------------------------------------------
+echo "[INFO] Cleaning logs..."
+
+rm -f {{ logs.backup_config }} || true
+rm -f {{ logs.full_backup }} || true
+rm -f {{ logs.daily_backup }} || true
+rm -f {{ logs.clean_backup }} || true
+
+# pgbackrest logs
+rm -rf {{ paths.logs_pg }} || true
+
+# ---------------------------------------------------------------
+# Бэкапы (ОПАСНО — спрашиваем)
+# ---------------------------------------------------------------
+read -p "Do you want to REMOVE ALL backups in {{ paths.base }}? (yes/no): " CONFIRM
+
+if [[ "$CONFIRM" == "yes" ]]; then
+    echo "[WARN] Removing all backups..."
+    rm -rf {{ paths.base }}
+else
+    echo "[INFO] Skipping backup removal"
+fi
+
+echo "=== Backup server removal completed ==="
