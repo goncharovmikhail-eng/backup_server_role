@@ -15,3 +15,9 @@
     src: backup_core/moth.sh.j2
     dest: "{{ paths.core }}/moth.sh"
     mode: '0755'
+
+- name: Deploy start.sh
+  template:
+    src: backup_core/start.sh.j2
+    dest: "{{ paths.core }}/start.sh"
+    mode: '0755'

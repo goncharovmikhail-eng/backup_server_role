@@ -26,6 +26,7 @@ postgres:
   user: postgres
   data_dir: "/var/lib/postgresql/{{ pg_version }}/main"
   owner_psql_backupdir: root #на бэкап сервере
+  ssh-key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFsT0TtMMPLuYTRbLXD1ogOHypyWSKMhQGv5wTGSeaSu postgres@svx-express-postgres"
 
 hosts:
   backup: svx-express-backup.ar.int
