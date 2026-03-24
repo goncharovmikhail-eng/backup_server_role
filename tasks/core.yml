@@ -7,8 +7,13 @@
 
 - name: Deploy aliases
   template:
-    src: backup_core/alias.sh.j2
-    dest: "{{ paths.core }}/alias.sh"
+    src: backup_core/pgbackrest.conf_psql_server.j2
+    dest: "{{ paths.core }}/pgbackrest.conf_psql_server"
+
+- name: Deploy ~/ssh/config
+  template:
+    src: backup_core/ssh_config.j2
+    dest: "~/.ssh/config"
 
 - name: Deploy ~/ssh/config
   template:
