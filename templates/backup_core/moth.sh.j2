@@ -26,9 +26,9 @@ echo
 
 echo -e "${YELLOW}${BOLD}Автоматизация:${RESET}"
 echo -e "  • Ежедневные инкрементальные бэкапы (PostgreSQL + Docker volumes)"
-systemctl list-timers | grep daily
+systemctl list-timers | grep backup_daily.timer
 echo -e "  • Еженедельный full backup"
-systemctl list-timers | grep full
+systemctl list-timers | grep  backup_full.timer 
 echo -e "      – включает: etcd, configs, full PostgreSQL, Docker volumes"
 echo -e "      – удаляет конфиги старше {{ backup_retention.config_days }} дней"
 echo -e "      – удаляет etcd старше {{ backup_retention.etcd_days }} дней"
