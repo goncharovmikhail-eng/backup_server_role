@@ -7,6 +7,12 @@
     - { src: "backup_full/backup_full.sh.j2", dest: "backup_full" }
     - { src: "backup_daily/backup_daily.sh.j2", dest: "backup_daily" }
 
+- name: copy header backup_config
+  copy:
+    src: core/backup_config_header.sh
+    dest: /usr/local/bin/backup_config
+  mode: '0755'
+
 - name: Deploy services
   template:
     src: "{{ item }}"

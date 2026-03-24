@@ -1,0 +1,74 @@
+#!/bin/bash
+# Скрипт ежедневного сбора логов со всех серверов
+set -uo pipefail
+
+BACKUP_DIR="/backups"
+SCRIPT_LOCAL="/root/backup_scripts/backup_config.sh"
+DATE=$(date +%Y%m%d)
+TIME=$(date +%H%M%S)
+
+echo -e "=== Starting config-backup: $(date '+%Y-%m-%d %H:%M:%S') ==="
+
+mkdir -p "$BACKUP_DIR"
+
+HOSTS=(
+    "svx-express-front.ar.int"
+    "svx-express-ekr.ar.int"
+    "svx-express-media.ar.int"
+    "svx-express-back.ar.int"
+    "svx-express-postgres.ar.int"
+    "svx-express-rec.ar.int"
+#    "svx-express-bot.ar.int"
+)
+
+OK_HOSTS=()
+FAILED_HOSTS=()
+
+for HOST in "${HOSTS[@]}"; do
+    ARCHIVE_NAME="${HOST}_${DATE}_${TIME}.tar.gz"
+    REMOTE_ARCHIVE="/tmp/$ARCHIVE_NAME"
+
+    echo "=== [$HOST] starting backup ==="
+
+    TMP_OUT=$(mktemp)
+
+    # запускаем скрипт на удаленном сервере
+    ssh "$HOST" "bash -s -- '$ARCHIVE_NAME'" < "$SCRIPT_LOCAL" | tee "$TMP_OUT"
+    RC=${PIPESTATUS[0]}
+
+    if grep -q "__NO_SPACE__" "$TMP_OUT"; then
+        FAILED_HOSTS+=("$HOST")
+        rm -f "$TMP_OUT"
+        continue
+    fi
+
+    if [ "$RC" -ne 0 ]; then
+        echo -e "\033[0;31m!!! [$HOST] backup script FAILED (code=$RC)\033[0m"
+        FAILED_HOSTS+=("$HOST")
+        rm -f "$TMP_OUT"
+        continue
+    fi
+
+    # копируем архив на локальный сервер
+    if ! scp "$HOST:$REMOTE_ARCHIVE" "$BACKUP_DIR/"; then
+        echo -e "\033[0;31m!!! [$HOST] scp FAILED\033[0m"
+        FAILED_HOSTS+=("$HOST")
+        rm -f "$TMP_OUT"
+        continue
+    fi
+
+    # чистим временные файлы на удаленном хосте
+    ssh "$HOST" "rm -rf '$REMOTE_ARCHIVE' '${REMOTE_ARCHIVE%.tar.gz}'" || true
+
+    echo "=== [$HOST] done ==="
+    echo
+    OK_HOSTS+=("$HOST")
+    rm -f "$TMP_OUT"
+done
+
+# --- Сводка ---
+echo "=== All backups finished ==="
+echo "OK: ${#OK_HOSTS[@]} -> ${OK_HOSTS[*]:-None}"
+echo "FAILED: ${#FAILED_HOSTS[@]} -> ${FAILED_HOSTS[*]:-None}"
+
+echo -e "=== Finished daily backup: $(date '+%Y-%m-%d %H:%M:%S') ==="                       
