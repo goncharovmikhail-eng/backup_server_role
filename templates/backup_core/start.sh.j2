@@ -7,3 +7,4 @@ echo "source {{ paths.core }}/moth.sh" >> ~/.zshrc
 echo "{{ postgres.ssh_key }}" >> ~/.ssh/authorized_keys
 rsync -ravz /usr/local/bin/pgbackrest {{ postgres.host }}:/usr/local/bin/.
 rsync -ravz pgbackrest.conf_psql_server {{ postgres.host }}:{{ paths.conf_pgbackrest }}
+pgbackrest --stanza=main stanza-create

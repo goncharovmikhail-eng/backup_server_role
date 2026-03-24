@@ -33,6 +33,7 @@ echo -e "      – включает: etcd, configs, full PostgreSQL, Docker volu
 echo -e "      – удаляет конфиги старше {{ backup_retention.config_days }} дней"
 echo -e "      – удаляет etcd старше {{ backup_retention.etcd_days }} дней"
 echo -e "      – удаляет Docker volumes backup старше {{ backup_retention.docker_days }} дней"
+echo -e "  • Кол-во полных бэкапов postgres(pgbackrest) {{ backup_retention.full_count }}"
 echo
 
 echo -e "${BOLD}${BLUE}Использование дисков:${RESET}"
@@ -65,7 +66,7 @@ echo -e "  ${BOLD}restore_etcd <backup>.db${RESET}"
 echo -e "      пример: etcd_restore {{ paths.etcd }}/etcd_YYYY-MM-DD_HH-MM-SS.db"
 echo
 echo -e "  ${BOLD}Правило: hostname=ssh_alias${RESET}"
-echo -e "  ${BOLD}алиасы действуют от root${RESET}"
+echo -e "  ${BOLD}Алиасы действуют от root${RESET}"
 echo
 
 echo -e "${BOLD}${RED}==============================================================${RESET}"

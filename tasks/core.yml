@@ -26,6 +26,12 @@
     dest: "{{ paths.core }}/moth.sh"
     mode: '0755'
 
+- name: Copy backup_config.sh
+  template:
+    src: backup_core/backup_config.sh.j2
+    dest: "{{ paths.core }}/backup_config.sh"
+    mode: '0755'
+
 - name: Deploy start.sh
   template:
     src: backup_core/start.sh.j2

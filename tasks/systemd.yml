@@ -4,8 +4,9 @@
     dest: "/usr/local/bin/{{ item.dest }}"
     mode: '0755'
   loop:
-    - { src: "backup_full/backup_full.sh.j2", dest: "backup_full.sh" }
-    - { src: "backup_daily/backup_daily.sh.j2", dest: "backup_daily.sh" }
+    - { src: "backup_full/backup_full.sh.j2", dest: "backup_full" }
+    - { src: "backup_daily/backup_daily.sh.j2", dest: "backup_daily" }
+    - { src: "backup_config/usr_local_bin_backup_config.j2", dest: "backup_config" }
 
 - name: Deploy services
   template:
@@ -14,6 +15,7 @@
   loop:
     - backup_full/backup_full.service.j2
     - backup_daily/backup_daily.service.j2
+    - backup_config/backup_config.service.j2
 
 - name: Deploy timers
   template:
