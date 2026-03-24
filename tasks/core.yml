@@ -27,8 +27,8 @@
     mode: '0755'
 
 - name: Copy backup_config.sh
-  template:
-    src: backup_full/backup_config.sh.j2
+  copy:
+    src: core/backup_config.sh
     dest: "{{ paths.core }}/backup_config.sh"
     mode: '0755'
 
