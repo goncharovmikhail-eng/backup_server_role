@@ -8,5 +8,5 @@
 - name: Copy postgres restore scripts
   copy:
     src: restore/restore_pgbackrest2.sh
-    dest: /usr/local/bin/restore_etcd
+    dest: /usr/local/bin/restore_pgbackrest
     mode: '0755'

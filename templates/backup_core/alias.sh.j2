@@ -22,7 +22,7 @@ alias log_backup_config="cat {{ logs.backup_config }}"
 # ---------------------------------------------------------------
 # Docker volumes с датой и временем
 # ---------------------------------------------------------------
-alias backup_volumes="ssh {{ hosts.back }} 'tar czpf - -C /var/lib/docker/volumes' | cat > {{ paths.volumes }}/backup_docker_volumes\$(date +%F-%H%M%S).tar.gz && tree {{ paths.volumes }}"
+alias backup_volumes="ssh {{ hosts.back }} 'tar czpf - -C /var/lib/docker/volumes' . | cat > {{ paths.volumes }}/backup_docker_volumes\$(date +%F-%H%M%S).tar.gz && tree {{ paths.volumes }}"
 
 # ---------------------------------------------------------------
 # Конфиги и другие серверные файлы
