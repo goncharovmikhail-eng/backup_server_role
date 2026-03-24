@@ -24,6 +24,6 @@
 
 - name: Deploy remove script
   template:
-    src: remove_backup_server.sh.j2
+    src: backup_core/remove_backup_server.sh.j2
     dest: "{{ paths.core }}/remove_backup_server.sh"
     mode: '0755'
