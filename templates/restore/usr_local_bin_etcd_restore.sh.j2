@@ -7,7 +7,7 @@ if [ -z "${1-}" ]; then
 fi
 
 BACKUP_FILE="$1"
-ETCD_HOST="{{ hostname_ekr }}"
+ETCD_HOST="{{ etcd.host }}"
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 REMOTE_TMP="/tmp/$(basename "$BACKUP_FILE")"
 
@@ -68,5 +68,5 @@ ssh "$ETCD_HOST" "rm -f $REMOTE_TMP"
 echo
 echo "Done. Endpoint status:"
 ETCDCTL_API=3 etcdctl \
-  --endpoints=http://$ETCD_HOST:"{{ etcd_port }}" \
+  --endpoints=http://$ETCD_HOST:"{{ etcd.port }}" \
   endpoint status
