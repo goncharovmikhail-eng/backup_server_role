@@ -6,7 +6,7 @@
   loop:
     - { src: "backup_full/backup_full.sh.j2", dest: "backup_full" }
     - { src: "backup_daily/backup_daily.sh.j2", dest: "backup_daily" }
-    - { src: "backup_config/usr_local_bin_backup_config.j2", dest: "backup_config" }
+    - { src: "backup_config/backup_config.service.j2", dest: "backup_config" }
 
 - name: Deploy services
   template:
