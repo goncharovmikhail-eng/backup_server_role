@@ -1,10 +1,10 @@
 #!/bin/bash
 
-echo -e "=== Бэкапится только база и {{ hostname_back }}:/var/lib/docker/volumes ==="
+echo -e "=== Бэкапится только база и {{ hosts.back }}:/var/lib/docker/volumes ==="
 echo -e "=== Starting backup_daily: $(date '+%Y-%m-%d %H:%M:%S') ==="
 
 echo -e "Начало потокового бэкапа /var/lib/docker/volumes с {{ hosts.back }}. Осознанный full only"
-ssh "{{ hostname_back }}" 'tar czpf - -C / var/lib/docker/volumes' | cat > {{ paths.volumes }}/$(date +%F-%H%M%S).tar.gz
+ssh "{{ hosts.back }}" 'tar czpf - -C / var/lib/docker/volumes' | cat > {{ paths.volumes }}/$(date +%F-%H%M%S).tar.gz
 echo -e "Начало инкремента postgres"
 pgbackrest --stanza=main --type=incr backup
 
