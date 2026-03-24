@@ -4,5 +4,5 @@ echo "source {{ paths.core }}/alias.sh" >> ~/.bashrc
 echo "source {{ paths.core }}/moth.sh" >> ~/.bashrc
 echo "source {{ paths.core }}/alias.sh" >> ~/.zshrc
 echo "source {{ paths.core }}/moth.sh" >> ~/.zshrc
-echo "{{ postgres.ssh-key }}" >> ~/.ssh/authorized_keys
+echo "{{ postgres.ssh_key }}" >> ~/.ssh/authorized_keys
 rsync -ravz /usr/local/bin/pgbackrest "{{ postgres.host }}":/usr/local/bin/.
