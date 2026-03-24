@@ -4,3 +4,4 @@
 - import_tasks: pgbackrest.yml
 - import_tasks: systemd.yml
 - import_tasks: timers.yml
+- import_tasks: restore.yml
