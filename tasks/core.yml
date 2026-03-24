@@ -12,6 +12,6 @@
 
 - name: Deploy motd
   template:
-    src: backup_core/motd.sh.j2
-    dest: "{{ paths.core }}/motd.sh"
+    src: backup_core/moth.sh.j2
+    dest: "{{ paths.core }}/moth.sh"
     mode: '0755'
