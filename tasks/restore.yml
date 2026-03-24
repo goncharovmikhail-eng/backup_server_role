@@ -1,12 +1,12 @@
 ---
 - name: Copy etcd restore scripts
-  copy:
-    src: restore/usr_local_bin_etcd_restore.sh
+  template:
+    src: restore/usr_local_bin_etcd_restore.sh.j2
     dest: /usr/local/bin/restore_etcd
     mode: '0755'
 
-- name: Copy postgres restore scripts
-  copy:
-    src: restore/restore_pgbackrest2.sh
-    dest: /usr/local/bin/restore_pgbackrest
-    mode: '0755'
+# - name: Copy postgres restore scripts
+#   template:
+#     src: restore/restore_pgbackrest2.sh
+#     dest: /usr/local/bin/restore_pgbackrest
+#     mode: '0755'
