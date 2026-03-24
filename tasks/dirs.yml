@@ -11,3 +11,4 @@
     - "{{ paths.volumes }}"
     - "{{ paths.logs_pg }}"
     - "{{ paths.core }}"
+    - "{{ paths.pgbackrest }}"
