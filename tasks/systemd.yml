@@ -13,6 +13,13 @@
     dest: /usr/local/bin/backup_config
     mode: '0755'
 
+
+- name: copy backup_etcd.sh
+  template:
+    src: backup_full/backup_etcd.sh.j2
+    dest: /usr/local/bin/backup_etcd
+    mode: '0755'
+
 - name: Deploy services
   template:
     src: "{{ item }}"
