@@ -68,7 +68,7 @@ alias clear_backups="rm -rf {{ paths.etcd }}/* {{ paths.postgres }}/* {{ paths.c
 # Прочее
 # ---------------------------------------------------------------
 cl() { echo '' > "$1" && vim "$1"; }
-aliasw() { nano "$HOME/moth.sh" && source "$HOME/moth.sh"; echo "Aliases reloaded"; }
+aliasw() { nano {{ paths.core }}/alias.sh && source {{ paths.core }}/alias.sh ; echo "Aliases reloaded"; }
 alias res="source ~/.zshrc"
 alias scc="less ~/.ssh/config"
 alias sc="vim ~/.ssh/config"
