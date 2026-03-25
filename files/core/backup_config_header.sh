@@ -2,7 +2,7 @@
 # Скрипт ежедневного сбора логов со всех серверов
 set -uo pipefail
 
-BACKUP_DIR="/backups"
+BACKUP_DIR="/backups/configs"
 SCRIPT_LOCAL="/root/backup_scripts/backup_config.sh"
 DATE=$(date +%Y%m%d)
 TIME=$(date +%H%M%S)
