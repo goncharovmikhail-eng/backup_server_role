@@ -5,8 +5,8 @@
     dest: /usr/local/bin/restore_etcd
     mode: '0755'
 
-# - name: Copy postgres restore scripts
-#   template:
-#     src: restore/restore_pgbackrest2.sh
-#     dest: /usr/local/bin/restore_pgbackrest
-#     mode: '0755'
+- name: Copy postgres restore scripts
+  template:
+    src: restore/restore_pgbackrest.sh
+    dest: /usr/local/bin/restore_pgbackrest
+    mode: '0755'

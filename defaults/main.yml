@@ -33,6 +33,7 @@ postgres:
   data_dir: "/var/lib/postgresql/{{ pg_version }}/main"
   owner_psql_backupdir: root #на бэкап сервере
   ssh_key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFsT0TtMMPLuYTRbLXD1ogOHypyWSKMhQGv5wTGSeaSu postgres@svx-express-postgres"
+  ip: "192.168.221.7"
 
 hosts:
   backup: svx-express-backup.ar.int
