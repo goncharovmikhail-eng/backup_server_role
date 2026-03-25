@@ -68,7 +68,7 @@ echo -e "      пример: restore_etcd {{ paths.etcd }}/etcd_YYYY-MM-DD_HH-MM
 echo
 echo -e "  ${BOLD}restore_pgbackrest <backup>.db${RESET}"
 echo -e "  посмотреть список бэкапов postgres: pgbackrest info"
-echo -e "      пример: restore_pgbackrest [backup_name]"
+echo -e "      пример: restore_pgbackrest --name [backup_name] [--read]"
 echo
 echo -e "  ${BOLD}Правило: hostname=ssh_alias${RESET}"
 echo -e "  ${BOLD}Алиасы действуют от root${RESET}"
