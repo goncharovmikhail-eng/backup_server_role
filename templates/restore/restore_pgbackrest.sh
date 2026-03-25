@@ -83,6 +83,13 @@ ssh root@"$SSH_HOST" "chown -R postgres:postgres $PGDATA"
 echo "=== START PostgreSQL ==="
 ssh root@"$SSH_HOST" "systemctl start $PGSERVICE"
 
+IS_RECOVERY=$(ssh root@"$SSH_HOST" "sudo -iu postgres psql -tAc 'SELECT pg_is_in_recovery();'" | xargs)
+
+if [[ "$IS_RECOVERY" == "t" ]]; then
+  echo "База в standby, это не master"
+  exit 1
+fi
+
 # =====================
 # READ-ONLY режим
 # =====================
@@ -101,5 +108,6 @@ if [[ "$READONLY" == true ]]; then
 else
   echo "=== READ-WRITE MODE (MASTER) ==="
 fi
+
 
 echo "=== RESTORE COMPLETE ==="
