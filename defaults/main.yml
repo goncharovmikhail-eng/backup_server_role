@@ -1,6 +1,10 @@
 ---
 pg_version: 15
 
+backup_packages:
+  - libpq5
+  - tree
+
 backup_retention:
   etcd_days: 30
   docker_days: 3

@@ -1,4 +1,9 @@
 ---
+- name: Install base packages
+  package:
+    name: "{{ backup_packages }}"
+    state: present
+
 - name: Copy core scripts
   copy:
     src: core/
