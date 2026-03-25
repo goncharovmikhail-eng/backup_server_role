@@ -9,7 +9,7 @@ PGDATA="/var/lib/postgresql/15/main"   # путь к PGDATA
 PGSERVICE="postgresql"                 # systemctl service name
 SSH_HOST="svx-express-postgres.ar.int" # ssh хост postgres сервера
 
-READONLY=true   # по умолчанию после restore включаем read-only
+READONLY=false   # по умолчанию мастер (read-write)
 
 # =====================
 # АРГУМЕНТЫ
@@ -22,8 +22,8 @@ while [[ $# -gt 0 ]]; do
       BACKUP_NAME="$2"
       shift 2
       ;;
-    --rw)
-      READONLY=false
+    --read)
+      READONLY=true
       shift
       ;;
     *)
@@ -34,7 +34,8 @@ while [[ $# -gt 0 ]]; do
 done
 
 if [[ -z "$BACKUP_NAME" ]]; then
-  echo "Использование: $0 --name <backup_name> [--rw]"
+  echo "Использование: $0 --name <backup_name> [--read]"
+  echo "  --read   : после restore включить режим read-only"
   exit 1
 fi
 
@@ -93,6 +94,10 @@ if [[ "$READONLY" == true ]]; then
     \"
     sudo -iu postgres psql -c \"SELECT pg_reload_conf();\"
   "
+  echo "База включена в read-only."
+  echo "Чтобы снять read-only и вернуть мастер режим, выполните на postgres сервере:"
+  echo "  sudo -iu postgres psql -c \"ALTER SYSTEM SET default_transaction_read_only = off;\""
+  echo "  sudo -iu postgres psql -c \"SELECT pg_reload_conf();\""
 else
   echo "=== READ-WRITE MODE (MASTER) ==="
 fi
