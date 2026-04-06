@@ -6,26 +6,45 @@
 - import_tasks: timers.yml
 - import_tasks: restore.yml
 
-- name: Clean old backups with logging
-  ansible.builtin.shell: |
-    find {{ item.path }} -type f -name "{{ item.pattern }}" -mtime +{{ item.days }} -print -delete
-  args:
-    executable: /bin/bash
+- name: Collect old backups
+  ansible.builtin.find:
+    paths: "{{ item.path }}"
+    patterns: "{{ item.pattern }}"
+    age: "{{ item.days }}d"
   loop:
-    - { path: "{{ paths.configs }}", pattern: "*.tar.gz", days: "{{ backup_retention.config_days }}" }
-    - { path: "{{ paths.etcd }}", pattern: "*.db", days: "{{ backup_retention.etcd_days }}" }
-    - { path: "{{ paths.volumes }}", pattern: "*.tar.gz", days: "{{ backup_retention.docker_days }}" }
-  register: cleanup_result
-  changed_when: cleanup_result.stdout != ""
+    - { name: "configs", path: "{{ paths.configs }}", pattern: "*.tar.gz", days: "{{ backup_retention.config_days }}" }
+    - { name: "etcd", path: "{{ paths.etcd }}", pattern: "*.db", days: "{{ backup_retention.etcd_days }}" }
+    - { name: "docker_volumes", path: "{{ paths.volumes }}", pattern: "*.tar.gz", days: "{{ backup_retention.docker_days }}" }
+  register: found_backups
 
-- name: Append cleanup logs
-  ansible.builtin.shell: |
-    {
-      echo "=== {{ ansible_date_time.iso8601 }} ==="
-      {% for r in cleanup_result.results %}
-      echo "[{{ r.item.path }}]"
-      echo "{{ r.stdout | replace('"', '\"') }}"
+- name: Delete old backups
+  ansible.builtin.file:
+    path: "{{ item.1.path }}"
+    state: absent
+  loop: "{{ found_backups.results | subelements('files') }}"
+  register: deleted_backups
+
+- name: Build cleanup log
+  ansible.builtin.set_fact:
+    cleanup_log: |
+      === {{ ansible_date_time.iso8601 }} ===
+      {% for group in found_backups.results %}
+      [{{ group.item.name }} | {{ group.item.path }}]
+      found: {{ group.matched }}
+      {% if group.files | length > 0 %}
+      deleted:
+      {% for f in group.files %}
+        - {{ f.path }}
       {% endfor %}
-    } >> {{ logs.clean_backup }}
+      {% else %}
+      deleted: none
+      {% endif %}
+      {% endfor %}
+
+- name: Append cleanup log
+  ansible.builtin.shell: |
+    cat <<'EOF' >> {{ logs.clean_backup }}
+    {{ cleanup_log }}
+    EOF
   args:
     executable: /bin/bash
