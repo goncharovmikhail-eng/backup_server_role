@@ -6,10 +6,10 @@ backup_packages:
   - tree
 
 backup_retention:
-  etcd_days: 30
-  docker_days: 3
-  config_days: 30
-  full_count: 4
+  etcd_days: 2
+  docker_days: 2
+  config_days: 2
+  full_count: 2
 
 backup_schedule:
   daily: "Mon..Sat 22:00:00"
