@@ -6,15 +6,22 @@
 - import_tasks: timers.yml
 - import_tasks: restore.yml
 
-- name: Find old config backups
-  ansible.builtin.find:
-    paths: "{{ paths.configs }}"
-    patterns: "*.tar.gz"
-    age: "{{ backup_retention.config_days }}d"
-  register: old_configs
+- name: Clean old backups with logging
+  ansible.builtin.shell: |
+    find {{ item.path }} -type f -name "{{ item.pattern }}" -mtime +{{ item.days }} -print -delete
+  args:
+    executable: /bin/bash
+  loop:
+    - { path: "{{ paths.configs }}", pattern: "*.tar.gz", days: "{{ backup_retention.config_days }}" }
+    - { path: "{{ paths.etcd }}", pattern: "*.db", days: "{{ backup_retention.etcd_days }}" }
+    - { path: "{{ paths.volumes }}", pattern: "*.tar.gz", days: "{{ backup_retention.docker_days }}" }
+  register: cleanup_result
+  changed_when: cleanup_result.stdout != ""
 
-- name: Delete old config backups
-  ansible.builtin.file:
-    path: "{{ item.path }}"
-    state: absent
-  loop: "{{ old_configs.files }}"
+  - name: Write cleanup logs
+  ansible.builtin.copy:
+    content: |
+      === {{ ansible_date_time.iso8601 }} ===
+      {{ cleanup_result.stdout }}
+    dest: "{{ logs.clean_backup }}"
+    mode: '0644'
