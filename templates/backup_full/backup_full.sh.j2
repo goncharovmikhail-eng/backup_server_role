@@ -7,7 +7,7 @@ backup_config
 
 pgbackrest --stanza=main --repo1-path={{ paths.postgres }} --type=full backup
 
-echo -e "Начало потокового бэкапа /var/lib/docker/volumes с {{ hosts.back }}. Осознанный full only"
+echo -e "Начало потокового бэкапа /var/lib/docker/volumes с {{ hosts.back }}. Full only"
 ssh {{ hosts.back }} 'tar czpf - -C / var/lib/docker/volumes' \
   | cat > "{{ paths.volumes }}/backup_docker_volumes$(date +%F-%H%M%S).tar.gz"
 

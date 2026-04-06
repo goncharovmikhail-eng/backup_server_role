@@ -18,10 +18,14 @@
   register: cleanup_result
   changed_when: cleanup_result.stdout != ""
 
-- name: Write cleanup logs
-  ansible.builtin.copy:
-    content: |
-      === {{ ansible_date_time.iso8601 }} ===
-      {{ cleanup_result.stdout }}
-    dest: "{{ logs.clean_backup }}"
-    mode: '0644'
+- name: Append cleanup logs
+  ansible.builtin.shell: |
+    {
+      echo "=== {{ ansible_date_time.iso8601 }} ==="
+      {% for r in cleanup_result.results %}
+      echo "[{{ r.item.path }}]"
+      echo "{{ r.stdout | replace('"', '\"') }}"
+      {% endfor %}
+    } >> {{ logs.clean_backup }}
+  args:
+    executable: /bin/bash
