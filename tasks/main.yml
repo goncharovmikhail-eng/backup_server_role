@@ -18,7 +18,7 @@
   register: cleanup_result
   changed_when: cleanup_result.stdout != ""
 
-  - name: Write cleanup logs
+- name: Write cleanup logs
   ansible.builtin.copy:
     content: |
       === {{ ansible_date_time.iso8601 }} ===
