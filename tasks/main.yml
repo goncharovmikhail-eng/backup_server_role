@@ -5,3 +5,16 @@
 - import_tasks: systemd.yml
 - import_tasks: timers.yml
 - import_tasks: restore.yml
+
+- name: Find old config backups
+  ansible.builtin.find:
+    paths: "{{ paths.configs }}"
+    patterns: "*.tar.gz"
+    age: "{{ backup_retention.config_days }}d"
+  register: old_configs
+
+- name: Delete old config backups
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: absent
+  loop: "{{ old_configs.files }}"
