@@ -1,43 +1,57 @@
 ---
-- name: Collect old backups
-  ansible.builtin.find:
-    paths: "{{ item.path }}"
-    patterns: "{{ item.pattern }}"
-    age: "{{ item.days }}d"
+- name: Get sorted backups
+  ansible.builtin.shell: |
+    ls -1t {{ item.path }}/{{ item.pattern }} 2>/dev/null | tail -n +{{ item.keep + 1 }}
+  register: old_files
   loop:
-    - { name: "configs", path: "{{ paths.configs }}", pattern: "*.tar.gz", days: "{{ backup_retention.config_days }}" }
-    - { name: "etcd", path: "{{ paths.etcd }}", pattern: "*.db", days: "{{ backup_retention.etcd_days }}" }
-    - { name: "docker_volumes", path: "{{ paths.volumes }}", pattern: "*.tar.gz", days: "{{ backup_retention.docker_days }}" }
-  register: found_backups
+    - { path: "{{ paths.configs }}", pattern: "*.tar.gz", keep: 2 }
 
 - name: Delete old backups
   ansible.builtin.file:
-    path: "{{ item.1.path }}"
+    path: "{{ item }}"
     state: absent
-  loop: "{{ found_backups.results | subelements('files') }}"
-  register: deleted_backups
+  loop: "{{ old_files.results | map(attribute='stdout_lines') | flatten }}"
 
-- name: Build cleanup log
-  ansible.builtin.set_fact:
-    cleanup_log: |
-      === {{ ansible_date_time.iso8601 }} ===
-      {% for group in found_backups.results %}
-      [{{ group.item.name }} | {{ group.item.path }}]
-      found: {{ group.matched }}
-      {% if group.files | length > 0 %}
-      deleted:
-      {% for f in group.files %}
-        - {{ f.path }}
-      {% endfor %}
-      {% else %}
-      deleted: none
-      {% endif %}
-      {% endfor %}
+# ---
+# - name: Collect old backups
+#   ansible.builtin.find:
+#     paths: "{{ item.path }}"
+#     patterns: "{{ item.pattern }}"
+#     age: "{{ item.days }}d"
+#   loop:
+#     - { name: "configs", path: "{{ paths.configs }}", pattern: "*.tar.gz", days: "{{ backup_retention.config_days }}" }
+#     - { name: "etcd", path: "{{ paths.etcd }}", pattern: "*.db", days: "{{ backup_retention.etcd_days }}" }
+#     - { name: "docker_volumes", path: "{{ paths.volumes }}", pattern: "*.tar.gz", days: "{{ backup_retention.docker_days }}" }
+#   register: found_backups
 
-- name: Append cleanup log
-  ansible.builtin.shell: |
-    cat <<'EOF' >> {{ logs.clean_backup }}
-    {{ cleanup_log }}
-    EOF
-  args:
-    executable: /bin/bash
+# - name: Delete old backups
+#   ansible.builtin.file:
+#     path: "{{ item.1.path }}"
+#     state: absent
+#   loop: "{{ found_backups.results | subelements('files') }}"
+#   register: deleted_backups
+
+# - name: Build cleanup log
+#   ansible.builtin.set_fact:
+#     cleanup_log: |
+#       === {{ ansible_date_time.iso8601 }} ===
+#       {% for group in found_backups.results %}
+#       [{{ group.item.name }} | {{ group.item.path }}]
+#       found: {{ group.matched }}
+#       {% if group.files | length > 0 %}
+#       deleted:
+#       {% for f in group.files %}
+#         - {{ f.path }}
+#       {% endfor %}
+#       {% else %}
+#       deleted: none
+#       {% endif %}
+#       {% endfor %}
+
+# - name: Append cleanup log
+#   ansible.builtin.shell: |
+#     cat <<'EOF' >> {{ logs.clean_backup }}
+#     {{ cleanup_log }}
+#     EOF
+#   args:
+#     executable: /bin/bash

@@ -1,6 +1,9 @@
 #!/bin/bash
 
 echo -e "=== Starting full-backup: $(date '+%Y-%m-%d %H:%M:%S') ==="
+echo "=== $(date) /clean configs backups ===" >> {{ logs.clean_backup }}
+find {{ paths.configs }} -type f -name "*.tar.gz" -mtime +{{ backup_retention.config_days }} \
+  -print -delete >> {{ logs.clean_backup }} 2>&1
 
 backup_etcd
 backup_config
@@ -16,8 +19,5 @@ echo "=== $(date) /clean backups etcd ===" >> {{ logs.clean_backup }}
 find {{ paths.etcd }} -type f -name "*.db" -mtime +{{ backup_retention.etcd_days }} \
   -print -delete >> {{ logs.clean_backup }} 2>&1
 
-echo "=== $(date) /clean configs backups ===" >> {{ logs.clean_backup }}
-find {{ paths.configs }} -type f -name "*.tar.gz" -mtime +{{ backup_retention.config_days }} \
-  -print -delete >> {{ logs.clean_backup }} 2>&1
 
 echo -e "=== Finished full-backup: $(date '+%Y-%m-%d %H:%M:%S') ==="
