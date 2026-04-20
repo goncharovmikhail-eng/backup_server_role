@@ -7,9 +7,9 @@ backup_packages:
 
 backup_retention:
   etcd_days: 2
-  docker_days: 2
+  docker_days: 1
   config_days: 2
-  full_count: 2
+  full_count: 1
 
 backup_schedule:
   daily: "Mon..Sat 22:00:00"
