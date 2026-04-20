@@ -16,7 +16,7 @@ HOSTS=(
     "svx-express-ekr.ar.int"
     "svx-express-media.ar.int"
     "svx-express-back.ar.int"
-    "svx-express-postgres.ar.int"
+#    "svx-express-postgres.ar.int"
     "svx-express-rec.ar.int"
 #    "svx-express-bot.ar.int"
 )
