@@ -1,10 +1,18 @@
 ---
+- name: Remove empty backups
+  ansible.builtin.shell: |
+    find {{ item.path }} -type f -name "*.tar.gz" -size 0 -delete
+  loop:
+    - { path: "{{ paths.configs }}" }
+    - { path: "{{ paths.volumes }}" }
+
 - name: Get sorted backups
   ansible.builtin.shell: |
     ls -1t {{ item.path }}/{{ item.pattern }} 2>/dev/null | tail -n +{{ item.keep + 1 }}
   register: old_files
   loop:
     - { path: "{{ paths.configs }}", pattern: "*.tar.gz", keep: 2 }
+    - { path: "{{ paths.volumes }}", pattern: "*.tar.gz", keep: 2 }
 
 - name: Delete old backups
   ansible.builtin.file:
