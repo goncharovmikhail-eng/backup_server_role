@@ -7,9 +7,9 @@ echo -e "=== Бэкапится только база и {{ hosts.back }}:/var/l
 echo -e "=== Starting backup_daily: $(date '+%Y-%m-%d %H:%M:%S') ==="
 
 echo -e "Начало потокового бэкапа /var/lib/docker/volumes с {{ hosts.back }}. Full only"
-ssh "{{ hosts.back }}" 'tar czpf - -C / var/lib/docker/volumes' | cat > {{ paths.volumes }}/$(date +%F-%H%M%S).tar.gz
-echo -e "Начало инкремента postgres"
-pgbackrest --stanza=main --type=incr backup
+ssh "{{ hosts.back }}" 'tar czpf - -C /var/lib/docker/volumes' | cat > {{ paths.volumes }}/$(date +%F-%H%M%S).tar.gz
+# echo -e "Начало инкремента postgres"
+# pgbackrest --stanza=main --type=incr backup
 
 
 echo -e "=== Finished backup_daily: $(date '+%Y-%m-%d %H:%M:%S') ==="

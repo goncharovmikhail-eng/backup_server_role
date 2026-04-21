@@ -4,7 +4,7 @@
     dest: "/usr/local/bin/{{ item.dest }}"
     mode: '0755'
   loop:
-    - { src: "backup_full/backup_full.sh.j2", dest: "backup_full" }
+  #  - { src: "backup_full/backup_full.sh.j2", dest: "backup_full" }
     - { src: "backup_daily/backup_daily.sh.j2", dest: "backup_daily" }
 
 - name: copy header backup_config
@@ -13,19 +13,18 @@
     dest: /usr/local/bin/backup_config
     mode: '0755'
 
-
-- name: copy backup_etcd.sh
-  template:
-    src: backup_full/backup_etcd.sh.j2
-    dest: /usr/local/bin/backup_etcd
-    mode: '0755'
+# - name: copy backup_etcd.sh
+#   template:
+#     src: backup_full/backup_etcd.sh.j2
+#     dest: /usr/local/bin/backup_etcd
+#     mode: '0755'
 
 - name: Deploy services
   template:
     src: "{{ item }}"
     dest: "/etc/systemd/system/{{ item | basename | regex_replace('.j2','') }}"
   loop:
-    - backup_full/backup_full.service.j2
+  #  - backup_full/backup_full.service.j2
     - backup_daily/backup_daily.service.j2
     - backup_config/backup_config.service.j2
 
@@ -34,7 +33,7 @@
     src: "{{ item }}"
     dest: "/etc/systemd/system/{{ item | basename | regex_replace('.j2','') }}"
   loop:
-    - backup_full/backup_full.timer.j2
+  #  - backup_full/backup_full.timer.j2
     - backup_daily/backup_daily.timer.j2
 
 - name: Reload systemd

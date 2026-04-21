@@ -4,15 +4,16 @@ pg_version: 15
 backup_packages:
   - libpq5
   - tree
+  - rsync
 
 backup_retention:
   etcd_days: 2
-  docker_days: 1
+  docker_days: 2
   config_days: 2
   full_count: 1
 
 backup_schedule:
-  daily: "Mon..Sat 22:00:00"
+  daily: "Mon..Fri 22:00:00"
   full: "Sun 01:00"
 
 paths:

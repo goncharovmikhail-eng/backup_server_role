@@ -14,43 +14,43 @@ REMOTE_ARCHIVE="/tmp/$ARCHIVE_NAME"
 CONFIG_DIRS=(
     /opt/express
     /opt/express-voice
-    /var/log/audit
-    /opt/docker-registry
+    # /var/log/audit
+    # /opt/docker-registry
 
-    # Systemd unit files
-    /etc/systemd
+    # # Systemd unit files
+    # /etc/systemd
 
-    # Kafka и Zookeeper
-    /opt/kafka
-    /opt/zookeeper
+    # # Kafka и Zookeeper
+    # /opt/kafka
+    # /opt/zookeeper
 
-    # etcd
-    /var/lib/etcd
-    /opt/ex_data/etcd/data
-    /etc/etcd
-    /etcd-data
+    # # etcd
+    # /var/lib/etcd
+    # /opt/ex_data/etcd/data
+    # /etc/etcd
+    # /etcd-data
 
-    # Redis
-    /var/lib/redis
-    /var/log/redis
-    /etc/redis
+    # # Redis
+    # /var/lib/redis
+    # /var/log/redis
+    # /etc/redis
 
-    # Patroni и PostgreSQL
-    /etc/patroni
-    /etc/postgresql/15/main
+    # # Patroni и PostgreSQL
+    # /etc/patroni
+    # /etc/postgresql/15/main
 
-    # Общие логи
-    /var/log
+    # # Общие логи
+    # /var/log
 
-    # Бинарники
-    /usr/local/bin/etcd
-    /usr/local/bin/etcdctl
-    /usr/local/bin/redis-server
-    /usr/local/bin/redis-cli
-    /usr/local/bin/redis-benchmark
-    /usr/local/bin/redis-check-aof
-    /usr/local/bin/redis-check-rdb
-    /usr/local/bin/redis-sentinel
+    # # Бинарники
+    # /usr/local/bin/etcd
+    # /usr/local/bin/etcdctl
+    # /usr/local/bin/redis-server
+    # /usr/local/bin/redis-cli
+    # /usr/local/bin/redis-benchmark
+    # /usr/local/bin/redis-check-aof
+    # /usr/local/bin/redis-check-rdb
+    # /usr/local/bin/redis-sentinel
 )
 
 # --- Проверка места на диске перед созданием архива ---

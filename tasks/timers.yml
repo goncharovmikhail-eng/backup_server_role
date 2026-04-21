@@ -4,5 +4,5 @@
     enabled: yes
     state: started
   loop:
-    - backup_full.timer
+  #  - backup_full.timer
     - backup_daily.timer
