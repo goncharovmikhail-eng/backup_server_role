@@ -37,8 +37,8 @@ postgres:
   ip: "192.168.221.7"
 
 hosts:
-  backup: svx-express-backup.ar.int
-  back: svx-express-back.ar.int
+  backup: main.crafttech
+  back: back.express.crafttech
   
 etcd: 
   host: svx-express-ekr.ar.int
