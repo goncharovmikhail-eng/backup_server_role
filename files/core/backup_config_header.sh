@@ -12,13 +12,15 @@ echo -e "=== Starting config-backup: $(date '+%Y-%m-%d %H:%M:%S') ==="
 mkdir -p "$BACKUP_DIR"
 
 HOSTS=(
-    "svx-express-front.ar.int"
-    "svx-express-ekr.ar.int"
-    "svx-express-media.ar.int"
-    "svx-express-back.ar.int"
-#    "svx-express-postgres.ar.int"
-    "svx-express-rec.ar.int"
-#    "svx-express-bot.ar.int"
+      "back.express.crafttech"
+      "media.express.crafttech"
+#     "svx-express-front.ar.int"
+#     "svx-express-ekr.ar.int"
+#     "svx-express-media.ar.int"
+#     "svx-express-back.ar.int"
+# #    "svx-express-postgres.ar.int"
+#     "svx-express-rec.ar.int"
+# #    "svx-express-bot.ar.int"
 )
 
 OK_HOSTS=()
