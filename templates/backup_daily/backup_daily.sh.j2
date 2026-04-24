@@ -1,12 +1,22 @@
 #!/bin/bash
 echo "=== $(date) /clean docker_volumes backups ===" >> {{ logs.clean_backup }}
-find {{ paths.volumes }} -type f -name "*.tar.gz" -mtime +{{ backup_retention.docker_days }} \
+
+DIR="{{ paths.volumes }}"
+KEEP={{ backup_keep_count | default(2) }}
+DAYS={{ backup_retention_days }}
+
+find "$DIR" -type f -name "*.tar.gz" -mmin +$((DAYS * 1440)) \
   -print -delete >> {{ logs.clean_backup }} 2>&1
+
+ls -1t "$DIR"/*.tar.gz 2>/dev/null | tail -n +$((KEEP+1)) | while read -r f; do
+  echo "$f" >> {{ logs.clean_backup }}
+  rm -f -- "$f"
+done
 
 echo -e "=== Бэкапится только база и {{ hosts.back }}:/var/lib/docker/volumes ==="
 echo -e "=== Starting backup_daily: $(date '+%Y-%m-%d %H:%M:%S') ==="
 
-echo -e "Начало потокового бэкапа /var/lib/docker/volumes с {{ hosts.back }}. Full only"
+echo -e "Начало потокового бэкапа /var/lib/docker/volumes с {{ hosts.back }}."
 ssh "{{ hosts.back }}" 'tar czpf - -C / var/lib/docker/volumes' | cat > {{ paths.volumes }}/$(date +%F-%H%M%S).tar.gz
 echo -e "Начало инкремента postgres"
 pgbackrest --stanza=main --type=incr backup
