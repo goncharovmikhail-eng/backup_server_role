@@ -1,13 +1,23 @@
-
+# ---------------------------------------------------------------
+# Алиасы для PostgreSQL / pgBackRest
+# ---------------------------------------------------------------
+alias log_psql_restore="cat {{ paths.logs_pg }}/main-restore.log"
+alias log_psql_backup="cat {{ paths.logs_pg }}/main-backup.log"
+alias backup_psql_incr="pgbackrest --stanza=main --type=incr backup && pgbackrest info"
+alias backup_psql_full="pgbackrest --stanza=main --type=full backup && pgbackrest info"
 
 # ---------------------------------------------------------------
 # Logs
 # ---------------------------------------------------------------
+alias log_full_backup="cat {{ logs.full_backup }}"
 alias log_daily_backup="cat {{ logs.daily_backup }}"
 alias log_clean_backup="cat {{ logs.clean_backup }}"
 alias log_backup_config="cat {{ logs.backup_config }}"
 
-
+# ---------------------------------------------------------------
+# Алиасы для etcd
+# ---------------------------------------------------------------
+# backup_etcd и etcd_restore должны быть в /usr/local/bin/
 
 # ---------------------------------------------------------------
 # Docker volumes с датой и временем
@@ -53,3 +63,14 @@ alias backup_configs="time systemctl start backup_config.service && tree {{ path
 # Очистка бэкапов
 # ---------------------------------------------------------------
 alias clear_backups="rm -rf {{ paths.etcd }}/* {{ paths.postgres }}/* {{ paths.configs }}/* {{ paths.volumes }}/* && tree {{ paths.base }}"
+
+# ---------------------------------------------------------------
+# Прочее
+# ---------------------------------------------------------------
+cl() { echo '' > "$1" && vim "$1"; }
+aliasw() { nano {{ paths.core }}/alias.sh && source {{ paths.core }}/alias.sh ; echo "Aliases reloaded"; }
+alias res="source ~/.zshrc"
+alias scc="less ~/.ssh/config"
+alias sc="vim ~/.ssh/config"
+alias md="mkdir -p"
+alias gitup="git fetch && git pull"
