@@ -3,7 +3,7 @@ echo "=== $(date) /clean docker_volumes backups ===" >> {{ logs.clean_backup }}
 
 DIR="{{ paths.volumes }}"
 KEEP={{ backup_keep_count | default(2) }}
-DAYS={{ backup_retention_days }}
+DAYS={{ backup_retention.docker_days }}
 
 find "$DIR" -type f -name "*.tar.gz" -mmin +$((DAYS * 1440)) \
   -print -delete >> {{ logs.clean_backup }} 2>&1
