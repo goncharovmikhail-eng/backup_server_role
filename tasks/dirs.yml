@@ -6,7 +6,7 @@
   loop:
     - "{{ paths.base }}"
     - "{{ paths.postgres }}"
-    - "{{ paths.etcd }}"
+   # - "{{ paths.etcd }}"
     - "{{ paths.configs }}"
     - "{{ paths.volumes }}"
     - "{{ paths.logs_pg }}"
