@@ -1,6 +1,7 @@
 # ---------------------------------------------------------------
 # Алиасы для PostgreSQL / pgBackRest
 # ---------------------------------------------------------------
+alias read_tar="zcat 2026-04-21-220027.tar.gz | tar -tf -"
 alias log_psql_restore="cat {{ paths.logs_pg }}/main-restore.log"
 alias log_psql_backup="cat {{ paths.logs_pg }}/main-backup.log"
 alias backup_psql_incr="pgbackrest --stanza=main --type=incr backup && pgbackrest info"
